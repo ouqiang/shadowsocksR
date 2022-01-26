@@ -3,7 +3,6 @@ package main
 import (
 	"bytes"
 	"fmt"
-	"github.com/sirupsen/logrus"
 	"github.com/v2rayA/shadowsocksR/client"
 	"golang.org/x/net/proxy"
 	"log"
@@ -56,7 +55,7 @@ func main() {
 	if err != nil {
 		log.Fatal(err)
 	}
-	dialer, err := client.NewSSR(s, proxy.Direct, logrus.New())
+	dialer, err := client.NewSSR(s, proxy.Direct)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -68,7 +67,12 @@ func main() {
 		log.Fatal(err)
 	}
 	buf := new(bytes.Buffer)
-	buf.ReadFrom(resp.Body)
-	defer resp.Body.Close()
+	_, err = buf.ReadFrom(resp.Body)
+	if err != nil {
+		log.Fatal(err)
+	}
+	defer func() {
+		_ = resp.Body.Close()
+	}()
 	log.Println(buf.String())
 }

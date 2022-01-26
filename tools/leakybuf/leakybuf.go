@@ -36,7 +36,6 @@ func (lb *LeakyBuf) Put(b []byte) {
 	case lb.freeList <- b:
 	default:
 	}
-	return
 }
 
 const (

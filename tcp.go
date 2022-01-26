@@ -2,7 +2,6 @@ package shadowsocksr
 
 import (
 	"bytes"
-	"errors"
 	"fmt"
 	"github.com/v2rayA/shadowsocksR/obfs"
 	"github.com/v2rayA/shadowsocksR/protocol"
@@ -26,10 +25,8 @@ type SSTCPConn struct {
 	IProtocol           protocol.IProtocol
 	readBuf             []byte
 	underPostdecryptBuf *bytes.Buffer
-	readIndex           uint64
 	decryptedBuf        *bytes.Buffer
 	writeBuf            []byte
-	lastReadError       error
 }
 
 func NewSSTCPConn(c net.Conn, cipher *streamCipher.StreamCipher) *SSTCPConn {
@@ -113,13 +110,9 @@ func (c *SSTCPConn) doRead(b []byte) (n int, err error) {
 
 	//do send back
 	if needSendBack {
-		c.Write(nil)
+		_, _ = c.Write(nil)
 		//log.Println("sendBack")
 		return 0, nil
-	}
-	//log.Println(len(decodedData), needSendBack, err, n)
-	if len(decodedData) == 0 {
-		//log.Println(string(c.readBuf[:200]))
 	}
 	decodedDataLen := len(decodedData)
 	if decodedDataLen == 0 {
@@ -129,7 +122,7 @@ func (c *SSTCPConn) doRead(b []byte) (n int, err error) {
 	if !c.DecryptInited() {
 
 		if len(decodedData) < c.InfoIVLen() {
-			return 0, errors.New(fmt.Sprintf("invalid ivLen:%v, actual length:%v", c.InfoIVLen(), len(decodedData)))
+			return 0, fmt.Errorf("invalid ivLen:%v, actual length:%v", c.InfoIVLen(), len(decodedData))
 		}
 		iv := decodedData[0:c.InfoIVLen()]
 		if err = c.InitDecrypt(iv); err != nil {
@@ -217,7 +210,7 @@ func (c *SSTCPConn) Write(b []byte) (n int, err error) {
 	if err != nil {
 		return 0, err
 	}
-	n, err = c.Conn.Write(outData)
+	_, err = c.Conn.Write(outData)
 	if err != nil {
 		return 0, err
 	}

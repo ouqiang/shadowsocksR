@@ -92,7 +92,6 @@ func packData(buffer *bytes.Buffer, suffixData []byte) {
 	binary.BigEndian.PutUint16(d[3:5], uint16(len(suffixData)&0xFFFF))
 	buffer.Write(d)
 	buffer.Write(suffixData)
-	return
 }
 
 func (t *tls12TicketAuth) Encode(data []byte) ([]byte, error) {

@@ -40,7 +40,7 @@ func testBlockCipher(t *testing.T, method string) {
 	var cipher *StreamCipher
 	var err error
 
-	cipher, err = cipher.NewStreamCipher(method, "foobar")
+	cipher, err = NewStreamCipher(method, "foobar")
 	if err != nil {
 		t.Fatal(method, "NewStreamCipher:", err)
 	}
@@ -104,7 +104,7 @@ func init() {
 func BenchmarkRC4Init(b *testing.B) {
 	key := cipherKey[:16]
 	for i := 0; i < b.N; i++ {
-		rc4.NewCipher(key)
+		_, _ = rc4.NewCipher(key)
 	}
 }
 
@@ -113,7 +113,7 @@ func benchmarkCipherInit(b *testing.B, method string) {
 	key := cipherKey[:ci.keyLen]
 	buf := make([]byte, ci.ivLen)
 	for i := 0; i < b.N; i++ {
-		ci.newStream(key, buf, Encrypt)
+		_, _ = ci.newStream(key, buf, Encrypt)
 	}
 }
 

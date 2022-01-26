@@ -87,8 +87,8 @@ func newCast5Stream(key, iv []byte, doe DecOrEnc) (cipher.Stream, error) {
 
 func newRC4MD5Stream(key, iv []byte, _ DecOrEnc) (cipher.Stream, error) {
 	h := md5.New()
-	h.Write(key)
-	h.Write(iv)
+	_, _ = h.Write(key)
+	_, _ = h.Write(iv)
 	rc4key := h.Sum(nil)
 
 	return rc4.NewCipher(rc4key)
