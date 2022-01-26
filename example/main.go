@@ -3,7 +3,7 @@ package main
 import (
 	"bytes"
 	"fmt"
-	"github.com/v2rayA/shadowsocksR/client"
+	"github.com/ouqiang/shadowsocksR/client"
 	"golang.org/x/net/proxy"
 	"log"
 	"net/http"

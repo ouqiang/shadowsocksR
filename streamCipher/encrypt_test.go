@@ -2,7 +2,7 @@ package streamCipher
 
 import (
 	"crypto/rc4"
-	"github.com/v2rayA/shadowsocksR/tools"
+	"github.com/ouqiang/shadowsocksR/tools"
 	"math/rand"
 	"reflect"
 	"testing"
